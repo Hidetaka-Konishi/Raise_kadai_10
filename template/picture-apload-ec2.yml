@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "EC2"
+
+Parameters:
+  RandomName:
+    Type: String
+  # VPCのRandomNameで記入した文字を記入する
+  VPCName:
+    Type: String
+  # RDSのRandomNameで記入した文字を記入する
+  RDSName:
+    Type: String
+
+Resources:
+    EC2Instance:
+        Type: "AWS::EC2::Instance"
+        Properties:
+            NetworkInterfaces:
+                - DeviceIndex: "0"
+                  SubnetId: !Sub "{{resolve:ssm:/${VPCName}/EC2SubnetId}}"
+                  GroupSet:
+                    - !Sub "{{resolve:ssm:/${RDSName}/EC2-SecurityGroup}}"
+                    - !Sub "{{resolve:ssm:/${RDSName}/EC2-SecurityGroup2}}"
+            ImageId: "ami-00c6177f250e07ec1"
+            InstanceType: "t2.micro"
+            KeyName: "KrrXp2bKjU3chCVq"
+            AvailabilityZone: !Sub "${AWS::Region}b"
+            Tenancy: "default"
+            EbsOptimized: false
+            SourceDestCheck: true
+            BlockDeviceMappings: 
+                - DeviceName: "/dev/xvda"
+                  Ebs: 
+                      Encrypted: false
+                      VolumeSize: 8
+                      VolumeType: "gp2"
+                      DeleteOnTermination: true
+            Tags: 
+                - Key: "Name"
+                  Value: !Sub ${RandomName}-ec2
+            HibernationOptions: 
+                Configured: false
+            EnclaveOptions: 
+                Enabled: false
+
+    ALBTargetParameter:
+        Type: "AWS::SSM::Parameter"
+        Properties: 
+          Name: !Sub "/${RandomName}/alb-target"
+          Type: "String"
+          Value: !Ref EC2Instance
+    
