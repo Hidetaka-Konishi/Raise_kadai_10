@@ -18,7 +18,7 @@ Resources:
                 Key: "Name"
                 Value: !Sub ${RandomName}-ec2vpc
 
-    EC2Subnet:
+    EC2Subnet1:
         Type: "AWS::EC2::Subnet"
         Properties:
             AvailabilityZone: !GetAtt EC2Subnet2.AvailabilityZone
@@ -87,7 +87,7 @@ Resources:
             DhcpOptionsId: !Ref EC2DHCPOptions
             VpcId: !Ref EC2VPC
 
-    EC2RouteTable:
+    EC2RouteTable1:
         Type: "AWS::EC2::RouteTable"
         Properties:
             VpcId: !Ref EC2VPC
@@ -108,7 +108,7 @@ Resources:
             Tags: 
               - 
                 Key: "Name"
-                Value: !Sub "raise10-rtb-private2-${EC2Subnet.AvailabilityZone}"
+                Value: !Sub "raise10-rtb-private2-${EC2Subnet1.AvailabilityZone}"
 
     EC2RouteTable4:
         Type: "AWS::EC2::RouteTable"
@@ -132,7 +132,7 @@ Resources:
             InternetGatewayId: !Ref EC2InternetGateway
             VpcId: !Ref EC2VPC
 
-    EC2SubnetRouteTableAssociation:
+    EC2SubnetRouteTableAssociation1:
         Type: "AWS::EC2::SubnetRouteTableAssociation"
         Properties:
             RouteTableId: !Ref EC2RouteTable4
@@ -148,7 +148,7 @@ Resources:
         Type: "AWS::EC2::SubnetRouteTableAssociation"
         Properties:
             RouteTableId: !Ref EC2RouteTable4
-            SubnetId: !Ref EC2Subnet
+            SubnetId: !Ref EC2Subnet1
 
     EC2SubnetRouteTableAssociation4:
         Type: "AWS::EC2::SubnetRouteTableAssociation"
@@ -163,12 +163,12 @@ Resources:
           Type: "String"
           Value: !Ref EC2VPC
 
-    SubnetIdParameter:
+    SubnetId1Parameter:
         Type: "AWS::SSM::Parameter"
         Properties: 
           Name: !Sub "/${RandomName}/EC2SubnetId"
           Type: "String"
-          Value: !Ref EC2Subnet
+          Value: !Ref EC2Subnet1
 
     SubnetId2Parameter:
         Type: "AWS::SSM::Parameter"

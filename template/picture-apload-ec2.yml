@@ -4,10 +4,10 @@ Description: "EC2"
 Parameters:
   RandomName:
     Type: String
-  # VPCのRandomNameで記入した文字を記入する
+  # VPCテンプレートのプレフィックスで記入した文字を記入する
   VPCName:
     Type: String
-  # RDSのRandomNameで記入した文字を記入する
+  # RDSテンプレートのプレフィックスで記入した文字を記入する
   RDSName:
     Type: String
 
@@ -43,7 +43,7 @@ Resources:
             EnclaveOptions: 
                 Enabled: false
 
-    ALBTargetParameter:
+    ALBTarget1Parameter:
         Type: "AWS::SSM::Parameter"
         Properties: 
           Name: !Sub "/${RandomName}/alb-target"

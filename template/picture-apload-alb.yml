@@ -4,13 +4,13 @@ Description: "ALB"
 Parameters:
   RandomName:
     Type: String
-  # VPCのRandomNameで記入した文字を記入する
+  # VPCテンプレートのプレフィックスで記入した文字を記入する
   VPCName:
     Type: String
-  # RDSのRandomNameで記入した文字を記入する
+  # RDSテンプレートのプレフィックスで記入した文字を記入する
   RDSName:
     Type: String
-  # EC2のRandomNameで記入した文字を記入する
+  # EC2テンプレートのプレフィックスで記入した文字を記入する
   EC2Name:
     Type: String
 
@@ -65,7 +65,7 @@ Resources:
                 Key: "routing.http.x_amzn_tls_version_and_cipher_suite.enabled"
                 Value: "false"
 
-    ElasticLoadBalancingV2Listener:
+    ElasticLoadBalancingV2Listener1:
         Type: "AWS::ElasticLoadBalancingV2::Listener"
         Properties:
             LoadBalancerArn: !Ref ElasticLoadBalancingV2LoadBalancer
@@ -73,10 +73,10 @@ Resources:
             Protocol: "HTTP"
             DefaultActions: 
               - 
-                TargetGroupArn: !Ref ElasticLoadBalancingV2TargetGroup
+                TargetGroupArn: !Ref ElasticLoadBalancingV2TargetGroup1
                 Type: "forward"
 
-    ElasticLoadBalancingV2TargetGroup:
+    ElasticLoadBalancingV2TargetGroup1:
         Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
         Properties:
             HealthCheckIntervalSeconds: 30

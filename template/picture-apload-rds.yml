@@ -4,7 +4,7 @@ Description: "RDS"
 Parameters:
   RandomName:
     Type: String
-  # VPCのRandomNameで記入した文字を記入する
+  # VPCテンプレートのプレフィックスで記入した文字を記入する
   VPCName:
     Type: String
 
@@ -41,7 +41,7 @@ Resources:
             DBSubnetGroupName: !Ref RDSDBSubnetGroup
             VPCSecurityGroups: 
               - !Ref EC2SecurityGroup2
-              - !Ref EC2SecurityGroup
+              - !Ref EC2SecurityGroup1
             DBParameterGroupName: "default.mysql8.0"
             OptionGroupName: "default:mysql-8-0"
             CACertificateIdentifier: "rds-ca-2019"
@@ -52,16 +52,13 @@ Resources:
             DBSubnetGroupDescription: "subnetgroup"
             DBSubnetGroupName: !Sub ${RandomName}-subnet-group
             SubnetIds: 
-              - !Sub "{{resolve:ssm:/${VPCName}/EC2SubnetId}}"
               - !Sub "{{resolve:ssm:/${VPCName}/EC2Subnet2Id}}"
               - !Sub "{{resolve:ssm:/${VPCName}/EC2Subnet3Id}}"
-              - !Sub "{{resolve:ssm:/${VPCName}/EC2Subnet4Id}}"
 
-    EC2SecurityGroup:
+    EC2SecurityGroup1:
         Type: "AWS::EC2::SecurityGroup"
         Properties:
             GroupDescription: "securitygroup"
-            GroupName: !Sub ${RandomName}-ec2-rds-alb-security
             VpcId: !Sub "{{resolve:ssm:/${VPCName}/VPC-ID}}"
             SecurityGroupIngress: 
               - 
@@ -86,19 +83,19 @@ Resources:
             VpcId: !Sub "{{resolve:ssm:/${VPCName}/VPC-ID}}"
             SecurityGroupIngress: 
               - 
-                SourceSecurityGroupId: !Ref EC2SecurityGroup
+                SourceSecurityGroupId: !Ref EC2SecurityGroup1
                 SourceSecurityGroupOwnerId: !Ref AWS::AccountId
                 Description: "3306rule"
                 FromPort: 3306
                 IpProtocol: "tcp"
                 ToPort: 3306
 
-    EC2SecurityGroupParameter:
+    EC2SecurityGroup1Parameter:
         Type: "AWS::SSM::Parameter"
         Properties: 
           Name: !Sub "/${RandomName}/EC2-SecurityGroup"
           Type: "String"
-          Value: !Ref EC2SecurityGroup
+          Value: !Ref EC2SecurityGroup1
 
     EC2SecurityGroup2Parameter:
         Type: "AWS::SSM::Parameter"
