@@ -2,14 +2,15 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "S3"
 
 Parameters:
-  RandomName:
+  Prefix:
     Type: String
+    Description: Fill in the part that hits the prefix to give a unique name.
 
 Resources:
     S3Bucket:
         Type: "AWS::S3::Bucket"
         Properties:
-            BucketName: !Sub ${RandomName}-s3buket
+            BucketName: !Sub ${Prefix}-s3buket
             BucketEncryption: 
                 ServerSideEncryptionConfiguration: 
                   - 
@@ -45,6 +46,5 @@ Resources:
             StorageLensConfiguration: 
                 AccountLevel: 
                     BucketLevel: {}
-                Id: !Sub ${RandomName}-s3-StorageLens
+                Id: !Sub ${Prefix}-s3-StorageLens
                 IsEnabled: true
-

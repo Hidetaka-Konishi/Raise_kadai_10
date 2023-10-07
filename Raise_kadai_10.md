@@ -1,34 +1,34 @@
+※CloudFomationテンプレートのRDSのパスワードはKMS キーを使用して暗号化し、パラメータストアに登録すること
+
 ## スタックの作成
 ### スタックの一覧
 
-![](./image/stack-all.png)
+![](./image/stack_all.png)
 
 ### VPCスタック
 
-![](./image/vpc-stack-1.png)
+![](./image/vpc_stack1.png)
 
-![](./image/vpc-stack-2.png)
+![](./image/vpc_stack2.png)
 
-![](./image/vpc-stack-3.png)
+![](./image/vpc_stack3.png)
 
-![](./image/vpc-stack-4.png)
-
-### RDSスタック
-
-![](./image/rds-stack-1.png)
-
-![](./image/rds-stack-2.png)
+![](./image/vpc_stack4.png)
 
 ### EC2スタック
 
-![](./image/ec2-stack.png)
+![](./image/ec2_stack.png)
+
+### RDSスタック
+
+![](./image/rds_stack.png)
 
 ### ALBスタック
 
-![](./image/alb-stack-1.png)
+![](./image/alb_stack1.png)
 
-![](./image/alb-stack-2.png)
+![](./image/alb_stack2.png)
 
 ### S3スタック
 
-![](./image/s3-stack.png)
+![](./image/s3_stack.png)

@@ -2,8 +2,9 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "VPC"
 
 Parameters:
-  RandomName:
+  Prefix:
     Type: String
+    Description: Fill in the part that hits the prefix to give a unique name.
 
 Resources:
     EC2VPC:
@@ -16,7 +17,7 @@ Resources:
             Tags: 
               - 
                 Key: "Name"
-                Value: !Sub ${RandomName}-ec2vpc
+                Value: !Sub ${Prefix}-ec2vpc
 
     EC2Subnet1:
         Type: "AWS::EC2::Subnet"
@@ -72,7 +73,7 @@ Resources:
             Tags: 
               - 
                 Key: "Name"
-                Value: !Sub ${RandomName}-igw
+                Value: !Sub ${Prefix}-igw
 
     EC2DHCPOptions:
         Type: "AWS::EC2::DHCPOptions"
@@ -117,7 +118,7 @@ Resources:
             Tags: 
               - 
                 Key: "Name"
-                Value: !Sub ${RandomName}-routetable
+                Value: !Sub ${Prefix}-routetable
 
     EC2Route:
         Type: "AWS::EC2::Route"
@@ -159,34 +160,34 @@ Resources:
     VPCIDParameter:
         Type: "AWS::SSM::Parameter"
         Properties: 
-          Name: !Sub "/${RandomName}/VPC-ID"
+          Name: !Sub "/${Prefix}/VPC-ID"
           Type: "String"
           Value: !Ref EC2VPC
 
     SubnetId1Parameter:
         Type: "AWS::SSM::Parameter"
         Properties: 
-          Name: !Sub "/${RandomName}/EC2SubnetId"
+          Name: !Sub "/${Prefix}/EC2Subnet1Id"
           Type: "String"
           Value: !Ref EC2Subnet1
 
     SubnetId2Parameter:
         Type: "AWS::SSM::Parameter"
         Properties: 
-          Name: !Sub "/${RandomName}/EC2Subnet2Id"
+          Name: !Sub "/${Prefix}/EC2Subnet2Id"
           Type: "String"
           Value: !Ref EC2Subnet2
 
     SubnetId3Parameter:
         Type: "AWS::SSM::Parameter"
         Properties: 
-          Name: !Sub "/${RandomName}/EC2Subnet3Id"
+          Name: !Sub "/${Prefix}/EC2Subnet3Id"
           Type: "String"
           Value: !Ref EC2Subnet3
 
     SubnetId4Parameter:
         Type: "AWS::SSM::Parameter"
         Properties: 
-          Name: !Sub "/${RandomName}/EC2Subnet4Id"
+          Name: !Sub "/${Prefix}/EC2Subnet4Id"
           Type: "String"
           Value: !Ref EC2Subnet4

@@ -2,30 +2,28 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "ALB"
 
 Parameters:
-  RandomName:
+  Prefix:
     Type: String
-  # VPCテンプレートのプレフィックスで記入した文字を記入する
-  VPCName:
+    Description: Fill in the part that hits the prefix to give a unique name.
+  VPCPrefix:
     Type: String
-  # RDSテンプレートのプレフィックスで記入した文字を記入する
-  RDSName:
+    Description: Fill in the prefixes listed in the VPC.
+  EC2Prefix:
     Type: String
-  # EC2テンプレートのプレフィックスで記入した文字を記入する
-  EC2Name:
-    Type: String
+    Description: Fill in the prefixes listed in the EC2.
 
 Resources:
     ElasticLoadBalancingV2LoadBalancer:
         Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
         Properties:
-            Name: !Sub ${RandomName}-alb
+            Name: !Sub ${Prefix}-alb
             Scheme: "internet-facing"
             Type: "application"
             Subnets: 
-              - !Sub "{{resolve:ssm:/${VPCName}/EC2SubnetId}}"
-              - !Sub "{{resolve:ssm:/${VPCName}/EC2Subnet4Id}}"
+              - !Sub "{{resolve:ssm:/${VPCPrefix}/EC2Subnet1Id}}"
+              - !Sub "{{resolve:ssm:/${VPCPrefix}/EC2Subnet4Id}}"
             SecurityGroups: 
-              - !Sub "{{resolve:ssm:/${RDSName}/EC2-SecurityGroup}}"
+              - !Ref ALBSecurityGroup1
             IpAddressType: "ipv4"
             LoadBalancerAttributes: 
               - 
@@ -91,10 +89,10 @@ Resources:
             Matcher: 
                 HttpCode: "200"
             HealthyThresholdCount: 5
-            VpcId: !Sub "{{resolve:ssm:/${VPCName}/VPC-ID}}"
-            Name: !Sub ${RandomName}-alb-targetgroup
+            VpcId: !Sub "{{resolve:ssm:/${VPCPrefix}/VPC-ID}}"
+            Name: !Sub ${Prefix}-alb-targetgroup1
             HealthCheckEnabled: true
-            TargetGroupAttributes: 
+            TargetGroupAttributes:       
               - 
                 Key: "target_group_health.unhealthy_state_routing.minimum_healthy_targets.count"
                 Value: "1"
@@ -136,6 +134,21 @@ Resources:
                 Value: "round_robin"
             Targets: 
               - 
-                Id: !Sub "{{resolve:ssm:/${EC2Name}/alb-target}}"
-                Port: 80
+                Id: !Sub "{{resolve:ssm:/${EC2Prefix}/alb-target1}}"
+                Port: 8080
 
+    ALBSecurityGroup1:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "alb-securitygroup1"
+            VpcId: !Sub "{{resolve:ssm:/${VPCPrefix}/VPC-ID}}"
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                FromPort: 80
+                IpProtocol: "tcp"
+                ToPort: 80
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
